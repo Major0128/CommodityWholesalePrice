@@ -1,26 +1,31 @@
 import datetime
+import sys
+
 import requests
 import json
 import time
 
 from MSSQL import MSSQL
 
-msClient = 0
+msClient = MSSQL("", "", "", "")
+totalCount = -1
+totalPageCount = -1
 
 
 # 读取数据库信息
 def set_db_config():
     print("请输入数据库地址：")
     db_host = input()
-    print("请输入数据库端口：")
-    db_port = input()
+    # print("请输入数据库端口：")
+    # db_port = input()
     print("请输入数据库用户名：")
     db_user = input()
     print("请输入数据库密码：")
     db_pwd = input()
     print("请输入数据库名称：")
     db_name = input()
-    print("正在初始化数据库连接：%s:%s:%s" % (db_host, db_port, db_name))
+    print("正在初始化数据库连接：%s:%s:%s" % (db_host, 1433, db_name))
+    global msClient
     msClient = MSSQL(db_host, db_user, db_pwd, db_name)
     try:
         msClient.GetConnect()
@@ -40,6 +45,7 @@ def set_db_config():
             print("检测到数据表")
     except:
         print("数据库连接失败")
+        sys.exit()
 
 
 # 处理查询时间
@@ -47,7 +53,7 @@ def get_query_date():
     print("请选择爬取数据日期")
     print("1:指定日期（不超过3个月时间间隔）")
     print("2:自动爬取至当前日期")
-    query_date_type = input()
+    query_date_type = int(input())
     start_date = ""
     end_date = ""
     if query_date_type == 1:
@@ -62,6 +68,9 @@ def get_query_date():
         start_date = lastest_price_date + delta
         start_date = start_date.strftime("%Y-%m-%d")
         end_date = time.strftime("%Y-%m-%d", time.localtime())
+        if lastest_price_date.strftime("%Y-%m-%d") == end_date:
+            print("当前数据已经同步到最新日期")
+            sys.exit()
     return start_date, end_date
 
 
@@ -80,21 +89,33 @@ def spider(page_no, start_date, end_date):
     response = requests.request("POST", url, headers=headers, data=payload)
     jsonResult = json.loads(response.text)
     data = jsonResult['result']
-    print("request:%d,count:%d" % (page_no, len(data)))
+    global totalCount, totalPageCount
+    if totalCount == -1:
+        totalCount = int(jsonResult['totalCount'])
+        totalPageCount = int(jsonResult['totalPageCount'])
+    if totalCount > -1:
+        print("一共查询到%d条,需要查询%d次" % (totalCount, totalPageCount))
+    if totalCount == 0:
+        print("为查询到相关数据")
+        sys.exit()
+    print("请求第%d次,返回%d条" % (page_no, len(data)))
     return jsonResult['hasNext'], data
 
 
 # 保存数据
 def save_data(data):
-    sql = "insert into commodity_wholesale_price(price_date, price, product_name, marketing_name, product_id, price_unit) values"
+    sql = "insert into commodity_wholesale_price(price_date, price, price_unit, product_id, product_name, marketing_name) values"
+    values = []
     for single_data in data:
         price_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(single_data["GET_P_DATE"] / 1000))
         price = single_data["AG_PRICE"]
         price_unit = single_data["C_UNIT"]
+        product_id = int(single_data["CRAFT_INDEX"])
         product_name = single_data["CRAFT_NAME"]
-        product_id = single_data["CRAFT_INDEX"]
         marketing_name = single_data["EUD_NAME"]
-        sql = sql + "%s,%f,%s,%s,%d,%s" % (price_date, price, product_name, marketing_name, product_id, price_unit)
+        values.append(
+            "('%s',%f,'%s',%d,'%s','%s')" % (price_date, price, price_unit, product_id, product_name, marketing_name))
+    sql = sql + ','.join(values)
     msClient.ExecSql(sql)
     print("成功插入%d条" % (len(data)))
 
@@ -107,4 +128,6 @@ if __name__ == '__main__':
     while has_next:
         has_next, data = spider(page_no, start_date, end_date)
         save_data(data)
-    print("插入成功")
+        page_no += 1
+        time.sleep(1)
+    print("数据同步成功")
