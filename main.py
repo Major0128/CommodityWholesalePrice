@@ -69,7 +69,7 @@ def get_query_date():
         start_date = start_date.strftime("%Y-%m-%d")
         end_date = time.strftime("%Y-%m-%d", time.localtime())
         if lastest_price_date.strftime("%Y-%m-%d") == end_date:
-            print("当前数据已经同步到最新日期")
+            print("当前数据已经同步到最新日期!")
             sys.exit()
     return start_date, end_date
 
@@ -96,9 +96,9 @@ def spider(page_no, start_date, end_date):
     if totalCount > -1:
         print("一共查询到%d条,需要查询%d次" % (totalCount, totalPageCount))
     if totalCount == 0:
-        print("为查询到相关数据")
+        print("未查询到相关数据!")
         sys.exit()
-    print("请求第%d次,返回%d条" % (page_no, len(data)))
+    print("请求第%d次,返回%d条" % (page_no, len(data)), end=",")
     return jsonResult['hasNext'], data
 
 
@@ -130,4 +130,4 @@ if __name__ == '__main__':
         save_data(data)
         page_no += 1
         time.sleep(1)
-    print("数据同步成功")
+    print("数据同步成功!")
