@@ -201,8 +201,9 @@
     </schema>
     <schema id="38" parent="2" name="dbo">
       <ObjectId>1</ObjectId>
-      <IntrospectionTimestamp>2021-07-08.13:59:24.033</IntrospectionTimestamp>
+      <IntrospectionTimestamp>2021-07-09.17:31:11.243</IntrospectionTimestamp>
       <Current>1</Current>
+      <DescriptionsCheckSum>7871384390</DescriptionsCheckSum>
     </schema>
     <schema id="39" parent="2" name="guest">
       <ObjectId>2</ObjectId>
@@ -291,67 +292,75 @@
     <table id="55" parent="38" name="commodity_wholesale_price">
       <ObjectId>885578193</ObjectId>
       <CreatedTimestamp>2021-07-08.12:36:02.420</CreatedTimestamp>
-      <ModifiedTimestamp>2021-07-08.12:36:47.650</ModifiedTimestamp>
+      <ModifiedTimestamp>2021-07-09.17:30:05.743</ModifiedTimestamp>
     </table>
-    <column id="56" parent="55" name="AG_PRICE">
-      <Position>1</Position>
-      <DataType>float|0s</DataType>
-    </column>
-    <column id="57" parent="55" name="CRAFT_INDEX">
-      <Position>2</Position>
-      <DataType>char(1 char)|0s</DataType>
-    </column>
-    <column id="58" parent="55" name="CRAFT_NAME">
-      <Position>3</Position>
-      <DataType>char(1 char)|0s</DataType>
-    </column>
-    <column id="59" parent="55" name="C_UNIT">
-      <Position>4</Position>
-      <DataType>char(1 char)|0s</DataType>
-    </column>
-    <column id="60" parent="55" name="EUD_NAME">
-      <Position>5</Position>
-      <DataType>char(1 char)|0s</DataType>
-    </column>
-    <column id="61" parent="55" name="EUD_PIC">
-      <Position>6</Position>
-      <DataType>char(1 char)|0s</DataType>
-    </column>
-    <column id="62" parent="55" name="GET_P_DATE">
-      <Position>7</Position>
-      <DataType>date|0s</DataType>
-    </column>
-    <column id="63" parent="55" name="ID">
-      <Position>8</Position>
+    <column id="56" parent="55" name="id">
+      <Position>16</Position>
+      <SequenceIdentity>1</SequenceIdentity>
       <DataType>bigint|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="64" parent="55" name="PAR_INDEX">
-      <Position>9</Position>
+    <column id="57" parent="55" name="price_date">
+      <Position>17</Position>
+      <Comment>价格日期</Comment>
+      <DataType>datetime|0s</DataType>
+    </column>
+    <column id="58" parent="55" name="price">
+      <Position>18</Position>
+      <Comment>价格</Comment>
+      <DataType>float|0s</DataType>
+    </column>
+    <column id="59" parent="55" name="product_name">
+      <Position>19</Position>
+      <Comment>商品名</Comment>
+      <DataType>varchar(64 char)|0s</DataType>
+    </column>
+    <column id="60" parent="55" name="marketing_name">
+      <Position>20</Position>
+      <Comment>市场名</Comment>
+      <DataType>varchar(64 char)|0s</DataType>
+    </column>
+    <column id="61" parent="55" name="product_id">
+      <Position>21</Position>
+      <Comment>商品id</Comment>
       <DataType>bigint|0s</DataType>
     </column>
-    <column id="65" parent="55" name="PROMULGATE_DATE">
-      <Position>10</Position>
-      <DataType>date|0s</DataType>
+    <column id="62" parent="55" name="price_unit">
+      <Position>22</Position>
+      <Comment>价格单位</Comment>
+      <DataType>varchar(16 char)|0s</DataType>
     </column>
-    <column id="66" parent="55" name="P_INDEX">
-      <Position>11</Position>
-      <DataType>char(1 char)|0s</DataType>
+    <column id="63" parent="55" name="create_time">
+      <Position>23</Position>
+      <Comment>创建时间</Comment>
+      <DataType>datetime|0s</DataType>
     </column>
-    <index id="67" parent="55" name="PK__commodit__3214EC2792C7C33B">
+    <index id="64" parent="55" name="PK__commodit__D50E2AB92D6E404C">
       <Position>1</Position>
       <NameSurrogate>1</NameSurrogate>
-      <ColNames>ID</ColNames>
+      <ColNames>id</ColNames>
       <Clustering>1</Clustering>
       <Unique>1</Unique>
     </index>
-    <key id="68" parent="55" name="PK__commodit__3214EC2792C7C33B">
-      <ObjectId>901578250</ObjectId>
+    <index id="65" parent="55" name="idx_product">
+      <Position>5</Position>
+      <ColNames>product_name</ColNames>
+    </index>
+    <index id="66" parent="55" name="idx_marketing">
+      <Position>6</Position>
+      <ColNames>marketing_name</ColNames>
+    </index>
+    <index id="67" parent="55" name="idx_price_date">
+      <Position>3</Position>
+      <ColNames>price_date</ColNames>
+    </index>
+    <key id="68" parent="55" name="PK__commodit__D50E2AB92D6E404C">
+      <ObjectId>933578364</ObjectId>
       <NameSurrogate>1</NameSurrogate>
-      <CreatedTimestamp>2021-07-08.12:36:47.650</CreatedTimestamp>
-      <ModifiedTimestamp>2021-07-08.12:36:47.650</ModifiedTimestamp>
-      <ColNames>ID</ColNames>
-      <UnderlyingIndexName>PK__commodit__3214EC2792C7C33B</UnderlyingIndexName>
+      <CreatedTimestamp>2021-07-08.15:29:33.330</CreatedTimestamp>
+      <ModifiedTimestamp>2021-07-08.15:29:33.330</ModifiedTimestamp>
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>PK__commodit__D50E2AB92D6E404C</UnderlyingIndexName>
       <Primary>1</Primary>
     </key>
   </database-model>
