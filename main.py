@@ -14,15 +14,15 @@ totalPageCount = -1
 
 # 读取数据库信息
 def set_db_config():
-    print("请输入数据库地址：")
+    print("请输入数据库地址：", end="")
     db_host = input()
     # print("请输入数据库端口：")
     # db_port = input()
-    print("请输入数据库用户名：")
+    print("请输入数据库用户名：", end="")
     db_user = input()
-    print("请输入数据库密码：")
+    print("请输入数据库密码：", end="")
     db_pwd = input()
-    print("请输入数据库名称：")
+    print("请输入数据库名称：", end="")
     db_name = input()
     print("正在初始化数据库连接：%s:%s:%s" % (db_host, 1433, db_name))
     global msClient
@@ -57,9 +57,9 @@ def get_query_date():
     start_date = ""
     end_date = ""
     if query_date_type == 1:
-        print("请输入开始日期,yyyy-mm-dd")
+        print("请输入开始日期,yyyy-mm-dd", end=" ")
         start_date = input()
-        print("请输入结束日期,yyyy-mm-dd")
+        print("请输入结束日期,yyyy-mm-dd", end=" ")
         end_date = input()
     if query_date_type == 2:
         sql = "SELECT max(price_date) FROM commodity_wholesale_price"
