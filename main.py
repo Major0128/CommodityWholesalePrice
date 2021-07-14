@@ -31,13 +31,12 @@ def set_db_config():
         msClient.GetConnect()
         print("数据库连接成功")
         # noinspection SqlResolve
-        sql = "select count(name) as co from sysobjects where name = 'commodity_wholesale_price'"
+        sql = "select count(name) as co from sysobjects where name = 'ds_commodity_wholesale_price'"
         table_num = (msClient.ExecQuery(sql))[0][0]
         if table_num != 1:
             print("未检测到表，开始创建")
-            sql_file = open('commodity_wholesale_price.sql', 'r')
-            msClient.ExecSql(sql_file)
-            sql_file.close()
+            sql_file_content = readSqlFile("commodity_wholesale_price.sql")
+            msClient.ExecSql(sql_file_content)
             table_num = (msClient.ExecQuery(sql))[0][0]
             if table_num == 1:
                 print("创建数据表成功")
@@ -46,6 +45,14 @@ def set_db_config():
     except:
         print("数据库连接失败")
         sys.exit()
+
+
+# 读取sql文件
+def readSqlFile(fileName):
+    sql_file = open(fileName, 'r', encoding='utf8')
+    sql_file_content = sql_file.readlines()
+    sql_file.close()
+    return "".join(sql_file_content)
 
 
 # 处理查询时间
@@ -103,7 +110,7 @@ def spider(page_no, start_date, end_date):
 
 
 # 保存数据
-def save_data(data):
+def save_data_to_db(data):
     sql = "insert into commodity_wholesale_price(price_date, price, price_unit, product_id, product_name, marketing_name) values"
     values = []
     for single_data in data:
@@ -127,7 +134,9 @@ if __name__ == '__main__':
     has_next = True
     while has_next:
         has_next, data = spider(page_no, start_date, end_date)
-        save_data(data)
-        page_no += 1
+        save_data_to_db(data)
+        page_no = page_no + 1
         time.sleep(1)
     print("数据同步成功!")
+
+

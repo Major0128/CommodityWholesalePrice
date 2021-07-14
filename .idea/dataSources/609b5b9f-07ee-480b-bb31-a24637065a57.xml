@@ -291,6 +291,7 @@
     </role>
     <table id="55" parent="38" name="commodity_wholesale_price">
       <ObjectId>885578193</ObjectId>
+      <Outdated>1</Outdated>
       <CreatedTimestamp>2021-07-08.12:36:02.420</CreatedTimestamp>
       <ModifiedTimestamp>2021-07-09.17:30:05.743</ModifiedTimestamp>
     </table>
